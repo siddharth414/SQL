@@ -1,0 +1,22 @@
+Player with Longest Streak
+
+You are given a table of tennis players and their matches that they could either win (W) or lose (L). 
+Find the longest streak of wins. A streak is a set of consecutive won matches of one player. The streak ends once a player loses their next match
+For this question, disregard edge cases such as: players who never lose, streaks that start before the first loss, and streaks that continue after the final match
+
+https://platform.stratascratch.com/coding/2059-player-with-longest-streak?code_type=3
+
+
+with cte as(
+select 
+    player_id, 
+    match_date,
+    case when match_result = 'W' then 1 else 0 end as p,
+    row_number() over(partition by player_id order by match_date ) as r_n
+from players_results ),
+ cte2 as(
+select player_id,p, sum(case when p = 1 then 0 else 1 end) over(partition by player_id order by match_date) as grp
+from cte )
+
+select player_id,longest_win_streak from (
+select player_id , count(grp) as longest_win_streak, dense_rank() over(order by  count(grp) desc) as r from cte2 where p = 1 group by player_id,grp) t where r = 1
