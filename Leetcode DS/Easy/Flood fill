@@ -1,0 +1,41 @@
+class Solution(object):
+    def floodFill(self, image, sr, sc, color):
+        """
+        :type image: List[List[int]]
+        :type sr: int
+        :type sc: int
+        :type color: int
+        :rtype: List[List[int]]
+        """
+
+        directions=[(1,0),(0,1),(-1,0),(0,-1)]
+        visited= set()
+        original_color = image[sr][sc]
+
+        if original_color == color:
+            return image
+        
+
+        def bfs(sr,sc):
+
+            q= deque()
+            q.append((sr,sc))
+            visited.add((sr,sc))
+
+            image[sr][sc] = color
+            while q:
+                r,c = q.popleft()
+
+                for dx,dy in directions:
+                    rx,cy = r+dx,c+dy
+
+                    if ( 0<=rx<len(image) and 0<=cy<len(image[0]) and image[rx][cy] == original_color and (rx,cy) not in visited):
+                        image[rx][cy] = color
+                        visited.add((rx,cy))
+                        q.append((rx,cy))
+                
+
+        bfs(sr,sc)
+        return image
+        
+
