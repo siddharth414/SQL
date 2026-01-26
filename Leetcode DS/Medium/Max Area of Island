@@ -1,0 +1,47 @@
+class Solution(object):
+    def maxAreaOfIsland(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+
+        maxcount= 0
+        directions = [(1,0),(0,1),(-1,0),(0,-1)]
+        visited = set()
+
+        def dfs(r,c):
+            
+            stack = []
+            stack.append((r,c))
+            count = 1
+
+            while stack:
+                r,c = stack.pop()
+                
+
+                for dx,dy in directions:
+                    rx,cy = r+dx, c+dy
+
+                    if (0<=rx<len(grid) and 0<=cy<len(grid[0]) and grid[rx][cy] == 1 and (rx,cy) not in visited ):
+                        count+=1
+                        visited.add((rx,cy))
+                        stack.append((rx,cy))
+
+
+            return count
+
+
+
+        
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
+
+                if grid[r][c] == 1 and (r,c) not in visited:
+                    visited.add((r,c))
+                    area =dfs(r,c)
+                    maxcount=max(maxcount,area)
+        return maxcount
+
+
+
+        
