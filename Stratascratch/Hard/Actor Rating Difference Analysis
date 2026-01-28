@@ -1,0 +1,16 @@
+https://platform.stratascratch.com/coding/10547-actor-rating-difference-analysis?code_type=3
+
+with ranked_films as ( 
+select actor_name,
+        film_rating,
+        row_number() over(partition by actor_name order by release_date desc ) as r from actor_rating_shift
+) 
+,cte2 as(
+select actor_name, 
+            case when count( case when r>1 then 1 end) = 0 then max(film_rating) 
+            else avg(case when r>1 then film_rating end) end as avg_rating,
+            max(case when r = 1 then film_rating end) as latest_rating from ranked_films
+            group by actor_name)
+            
+select actor_name,avg_rating , latest_rating , latest_rating - avg_rating as rating_difference
+from cte2
