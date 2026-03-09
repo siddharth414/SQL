@@ -1,0 +1,6 @@
+https://platform.stratascratch.com/coding/10046-top-5-states-with-5-star-businesses?code_type=3
+
+select state, n_businesses from (  select state, count(business_id) as n_businesses ,
+    dense_rank() over( order by count(business_id) desc) as r
+    from yelp_business where stars = 5 
+    group by state order by count(business_id) desc ) as t where r <6
